@@ -1,5 +1,6 @@
 import cv2
 from pygame import mixer
+import time
 mixer.init()
 sound=mixer.Sound('alarm.wav')
 faces=cv2.CascadeClassifier("face.xml")
@@ -9,7 +10,7 @@ cap=cv2.VideoCapture(0)
 while True:
     ret,frame=cap.read()
     gray=cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-    face=faces.detectMultiScale(gray,1.3,5)
+    face=faces.detectMultiScale(gray,1.1,5)
     for (x,y,w,h) in face:
         cv2.rectangle(frame,(x,y),(x+w,y+h),(0,0,255),thickness=3)
         gray_face=gray[y:y+h,x:x+w]
@@ -17,10 +18,11 @@ while True:
         eye=eyes.detectMultiScale(gray_face,1.3,5)
         if eye is ():
             score=score+1
-
+            time.sleep(0.2)
         else:
             for (a,b,c,d) in eye:
                 cv2.rectangle(color_face,(a,b),(a+c,b+d),(100,100,100),thickness=3)
+                score=0
     cv2.putText(frame, "Score" + str(score), (100, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 1)
     if score>10:
         sound.play()
